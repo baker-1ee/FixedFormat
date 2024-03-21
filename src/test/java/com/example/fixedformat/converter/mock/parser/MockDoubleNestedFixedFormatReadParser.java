@@ -16,9 +16,9 @@ public class MockDoubleNestedFixedFormatReadParser extends FixedFormatReadParser
                 List.of(
                         new RecordType(MockFileHeadRecord::isValid, "File Head", MockFileHeadRecord::new, true, MockDoubleNestedFixedFormat::new),
                         new RecordType(MockHeadRecord::isValid, "Head", MockHeadRecord::new, true, MockOuterFixedFormat::new),
-                        new RecordType(MockDetailRecord::isValid, "Detail", MockHeadRecord::new, true, MockInnerFixedFormat::new),
-                        new RecordType(MockImportAmountRecord::isValid, "수입 금액", MockHeadRecord::new),
-                        new RecordType(MockTailRecord::isValid, "Tail", MockHeadRecord::new)
+                        new RecordType(MockDetailRecord::isValid, "Detail", MockDetailRecord::new, true, MockInnerFixedFormat::new),
+                        new RecordType(MockImportAmountRecord::isValid, "수입 금액", MockImportAmountRecord::new),
+                        new RecordType(MockTailRecord::isValid, "Tail", MockTailRecord::new)
                 )
         );
     }

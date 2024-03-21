@@ -317,7 +317,7 @@ public class FixedFormatConverter<T extends FixedFormat> {
         );
     }
 
-    int getPaddingLength(String fieldValue, int annotationSize) throws UnsupportedEncodingException {
+    public int getPaddingLength(String fieldValue, int annotationSize) throws UnsupportedEncodingException {
         return annotationSize - fieldValue.getBytes(characterSet).length + fieldValue.length();
     }
 

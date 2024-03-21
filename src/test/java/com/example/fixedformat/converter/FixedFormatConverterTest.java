@@ -9,12 +9,12 @@ import com.example.fixedformat.converter.mock.fixedformat.MockDoubleNestedFixedF
 import com.example.fixedformat.converter.mock.fixedformat.MockNestedFixedFormat;
 import com.example.fixedformat.converter.mock.fixedformat.MockVatFixedFormat;
 import com.example.fixedformat.converter.mock.fixedformatrecord.MockDetailRecord;
+import com.example.fixedformat.converter.mock.parser.MockDoubleNestedFixedFormatReadParser;
 import com.example.fixedformat.converter.mock.parser.MockFixedFormatReadParser;
 import com.example.fixedformat.converter.mock.parser.MockNestedFixedFormatReadParser;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ class FixedFormatConverterTest {
     void init() {
         fixedFormatConverter = fixedFormatFactory.getConverter(new FixedFormatHomeTaxFormatter(), new MockFixedFormatReadParser());
         nestedFixedFormatConverter = fixedFormatFactory.getConverter(new FixedFormatHomeTaxFormatter(), new MockNestedFixedFormatReadParser());
-        doubleNestedFixedFormatConverter = fixedFormatFactory.getConverter(new FixedFormatHomeTaxFormatter(), new MockNestedFixedFormatReadParser());
+        doubleNestedFixedFormatConverter = fixedFormatFactory.getConverter(new FixedFormatHomeTaxFormatter(), new MockDoubleNestedFixedFormatReadParser());
     }
 
     @Test
@@ -100,7 +100,7 @@ class FixedFormatConverterTest {
                         )
                 )
                 .deductionReductionCode("211")
-                .deductionReductionAmount(3000L)
+                .deductionReductionAmount(-3000L)
                 .build();
     }
 
@@ -158,32 +158,63 @@ class FixedFormatConverterTest {
     }
 
     @Test
-    void whenStartsMinusThenZeroIsNoChange() {
+    @SneakyThrows
+    @DisplayName("중첩 구조의 model을 byte array로 변환할 수 있다")
+    void convertNestedModelToByteArray() {
         // given
-        String value = "-000000500";
+        FixedFormat fixedFormat = MockNestedFixedFormat.of(loadMockDataJson());
 
         // when
-        String actual = StringUtils.stripStart(value, "0");
+        byte[] bytes = nestedFixedFormatConverter.convert(fixedFormat);
 
         // then
-        assertThat(actual).isEqualTo(value);
+        String[] lines = new String(bytes).split(CommonConstants.CRLF);
+        assertThat(lines.length).isEqualTo(8);
     }
 
     @Test
-    void whenStartsMinusAndParseAsLongThenZeroIsStriped() {
+    @SneakyThrows
+    @DisplayName("중첩 구조의 byte array를 model로 변환할 수 있다")
+    void convertNestedByteArrayToModel() {
         // given
-        String value = "-000000500";
+        List<FixedFormat> fixedFormats = List.of(MockNestedFixedFormat.of(loadMockDataJson()), MockNestedFixedFormat.of(loadMockDataJson2()));
+        byte[] bytes = nestedFixedFormatConverter.convert(fixedFormats);
 
         // when
-        Long actual = Long.parseLong(value);
+        List<MockNestedFixedFormat> models = nestedFixedFormatConverter.convert(bytes);
 
         // then
-        assertThat(actual).isEqualTo(-500);
+        assertThat(models.size()).isEqualTo(2);
     }
 
     @Test
-    void 음수를_문자로_패딩_할때_Minus_부호를_가장_앞으로_빼보자() {
-        
+    @SneakyThrows
+    @DisplayName("이중 중첩 구조에서도 model을 byte array로 변환할 수 있다")
+    void convertDoubleNestedModelToByteArray() {
+        // given
+        List<FixedFormat> fixedFormats = List.of(MockDoubleNestedFixedFormat.of(loadMockDataJson()), MockDoubleNestedFixedFormat.of(loadMockDataJson2()));
+
+        // when
+        byte[] bytes = doubleNestedFixedFormatConverter.convert(fixedFormats);
+
+        // then
+        String[] lines = new String(bytes).split(CommonConstants.CRLF);
+        assertThat(lines.length).isEqualTo(36);
+    }
+
+    @Test
+    @SneakyThrows
+    @DisplayName("이중 중첩 구조의 byte array를 model로 변환할 수 있다")
+    void convertDoubleNestedByteArrayToModel() {
+        // given
+        List<FixedFormat> fixedFormats = List.of(MockDoubleNestedFixedFormat.of(loadMockDataJson()), MockDoubleNestedFixedFormat.of(loadMockDataJson2()));
+        byte[] bytes = doubleNestedFixedFormatConverter.convert(fixedFormats);
+
+        // when
+        List<MockDoubleNestedFixedFormat> models = doubleNestedFixedFormatConverter.convert(bytes);
+
+        // then
+        assertThat(models.size()).isEqualTo(2);
     }
 
 }
