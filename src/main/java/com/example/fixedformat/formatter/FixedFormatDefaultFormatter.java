@@ -37,7 +37,7 @@ public class FixedFormatDefaultFormatter implements FixedFormatFormatter {
         }
     }
 
-    private String substringByBytes(String str, int beginBytes, int endBytes, String characterSet) throws FixedFormatConverterException {
+    protected String substringByBytes(String str, int beginBytes, int endBytes, String characterSet) throws FixedFormatConverterException {
         if (str == null || str.length() == 0) {
             return "";
         }

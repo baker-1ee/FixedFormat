@@ -18,4 +18,21 @@ public class FixedFormatFactory {
     public <T extends FixedFormat> FixedFormatConverter<T> getConverter(FixedFormatReadParser parser) {
         return new FixedFormatConverter<T>(defaultLineSeparator, defaultCharacterSet, defaultFormatter, parser);
     }
+
+    public <T extends FixedFormat> FixedFormatConverter<T> getConverter(String lineSeparator, String characterSet, FixedFormatReadParser parser) {
+        return new FixedFormatConverter<T>(lineSeparator, characterSet, defaultFormatter, parser);
+    }
+
+    public <T extends FixedFormat> FixedFormatConverter<T> getConverter(String characterSet, FixedFormatReadParser parser) {
+        return new FixedFormatConverter<T>(defaultLineSeparator, characterSet, defaultFormatter, parser);
+    }
+
+    public <T extends FixedFormat> FixedFormatConverter<T> getConverter(FixedFormatFormatter formatter, FixedFormatReadParser parser) {
+        return new FixedFormatConverter<T>(defaultLineSeparator, defaultCharacterSet, formatter, parser);
+    }
+
+    public <T extends FixedFormat> FixedFormatConverter<T> getConverter(String lineSeparator, String characterSet, FixedFormatFormatter formatter, FixedFormatReadParser parser) {
+        return new FixedFormatConverter<T>(lineSeparator, characterSet, formatter, parser);
+    }
+
 }
