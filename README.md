@@ -14,7 +14,6 @@
 # 개요 (Overview)
 
 아래의 json은 내부 시스템에서 관리하는 데이터 모델의 간단한 예시입니다.
-
 실무에서 관리하는 데이터 모델은 더 복잡할 것입니다.
 
 ```json
@@ -33,8 +32,7 @@
     }
   ],
   "deductionReductionCode": "211",
-  "deductionReductionAmount": 3000,
-  ...
+  "deductionReductionAmount": 3000
 }
 ```
 
@@ -46,7 +44,6 @@
 15I10320001-00000000005000
 15I10320002000000000004000
 14I103200211000000000003000
-...
 ```
 
 아래와 같이 외부 기관에서 요구하는 전문 spec 기반으로 생성된 text입니다. 전문 spec을 살펴보면, 레코드 단위로 문자열 한행으로 매핑되는 것을 볼 수 있으며, 레코드의 필드 단위로 TYPE, 길이,
@@ -58,9 +55,7 @@
 # 사용법 (Usage)
 
 1. 전문 spec 에 정의 되어있는 레코드 순서에 맞게 전문의 전체 구조를 나타내는 클래스를 작성합니다.
-
     - FixedFormat 인터페이스를 구현
-
    ```java
    public class MockVatFixedFormat implements FixedFormat {
    
@@ -75,10 +70,8 @@
    ```
 
 2. 전문 spec 에 정의 되어있는 레코드의 클래스를 작성합니다.
-
     - FixedFormatRecord 인터페이스 구현
     - `@FixedFormatColumn` 어노테이션에 필드 별 규칙 입력
-
    ```java
    public class MockHeadRecord implements FixedFormatRecord {
        @FixedFormatColumn(size = 2, nullable = false)
@@ -138,19 +131,15 @@
    ```
 
 3. fixed format converter 인스턴스를 생성합니다.
-
     - `FixedFormatFactory` 를 통해 포맷터, 문자열 인코딩 방식, 개행문자 등의 default option이 적용된 converter 인스턴스를 간단하게 생성할 수 있습니다.
-
    ```java
-   FixedFormatConverter<MockVatFixedFormat> = fixedFormatConverter = fixedFormatFactory.getConverter();
+    FixedFormatConverter<MockVatFixedFormat> = fixedFormatConverter = fixedFormatFactory.getConverter();
    ```
 
 4. fixed format converter의 `convert` 메소드를 호출합니다.
-
     - 사전에 정의해둔 FixedFormat 에 전문 변환할 데이터를 채운 뒤, FixedFormatConvert의 `convert` 메소드를 호출하면, 전문 spec 요구사항을 만족하는 전문 text 문자열이
       byte array 로 반환됩니다.
     - byte array를 파일로 저장할지 네트워크 송신할지는 사용자가 결정하면 됩니다.
-
    ```java
    // given
    MockVatDataJson mockVatDataJson = loadMockDataJson();
