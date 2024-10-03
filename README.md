@@ -2,6 +2,7 @@
 
 ## 전문 메시지 변환기 (fixed length format message translator)
 
+
 ![image-overview](images/overview.png)
 
 - fixed format 모듈은 내부 시스템에서 관리하는 데이터 모델을 외부 시스템에서 요구하는 전문 양식으로 변환하는 따분한 과정을 제거하고, 유지보수성을 향상시켜줍니다.
